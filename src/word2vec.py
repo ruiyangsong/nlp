@@ -6,7 +6,7 @@ from gensim.models.word2vec import Word2Vec
 def main():
     userdict_pth   = '../userdict.txt'  # defined by user for precisely word splitting
     stopwords_pth  = '../baidu_stopwords.txt'  # refer to [https://github.com/goto456/stopwords/]
-    model_dir      = '../model'
+    model_dir      = '../model/word2vec'
     data_pth       = '../data/data.csv'
     keywords_pth = '../data/keywords.csv'
 
