@@ -2,68 +2,112 @@
 import os, sys, time
 import numpy as np
 from keras import Input, models, layers, optimizers, callbacks, regularizers, initializers
-from utils import split_data, calc_class_weights, to_one_hot, config_tf, net_saver, net_predictor
+from utils import split_data, calc_class_weights, to_one_hot, config_tf, net_saver, net_predictor, test_score
+
+os.environ['MKL_NUM_THREADS'] = '3'
+os.environ['OPENBLAS_NUM_THREADS'] = '3'
+np.set_printoptions(linewidth=np.inf)
+
+def grid_search():
+    mode_lst = ['padding', 'sum']
+    epochs_lst = [200] #cuz early stopping exists
+    learning_rate_lst = [0.1, 0.01, 0.001, 0.0001, 0.00001]
+
+    verbose = 0
+
+    hyper_tag_lst = []
+    acc_lst = []
+    for mode in mode_lst:
+        for epochs in epochs_lst:
+            for learning_rate in learning_rate_lst:
+                data_pth   = '../data/mode_%s.npz' %mode
+                x_train, y_train, x_test, y_test, x_val, y_val, class_weights_dict = _data(data_pth,split_val=True,verbose=verbose)
+
+                config_tf(user_mem=2500, cuda_rate=0.2)
+                model, history_dict = TrainResNet(x_train, y_train, x_val, y_val, class_weights_dict, filepth=None, epochs=epochs, lr=learning_rate,verbose=verbose)
+                acc = history_dict['val_acc'][-1]
+                early_epochs = len(history_dict['val_acc'])
+                hyper_tag_lst.append('%s_%s_%s' % (mode, early_epochs, learning_rate))
+                print('\nmode_%s_epochs_%s_lr_%s' % (mode, epochs, learning_rate))
+                acc_lst.append(acc)
+                print('val_acc:', acc)
+                # sys.stdout.flush()# or "python -u“
+    print('\nThe Best Hypers are: %s, Best val_acc is: %s' % (hyper_tag_lst[acc_lst.index(max(acc_lst))], max(acc_lst)))
 
 def main():
-    if len(sys.argv) == 1:
-        print('Usage: %s %s'%(sys.argv[0], ['stack','padding','sum']))
+    if len(sys.argv) < 4:
+        print('Usage: %s %s %s %s'%(sys.argv[0], ['padding','sum'], 'epochs', 'learning_rate'))
         exit(0)
+    MODE          = sys.argv[1]
+    EPOCHS        = int(sys.argv[2])
+    LEARNING_RATE = float(sys.argv[3])
 
-    data_pth   = '../data/mode_%s.npz' % sys.argv[1]
-    model_name = '%s_mode%s_%s'%(sys.argv[0].split('/')[-1][:-3], sys.argv[1], time.strftime("%Y.%m.%d.%H.%M.%S", time.localtime()))
+    data_pth = '../data/mode_%s.npz' %MODE
+    model_name = '%s_mode%s_%s'%(sys.argv[0].split('/')[-1][:-3], MODE, time.strftime("%Y.%m.%d.%H.%M.%S", time.localtime()))
     modeldir   = '../model/Conv1D/%s' % model_name
-    filepth    = '%s/weights-best.h5' % modeldir
     os.makedirs(modeldir, exist_ok=True)
 
     #
     # load data
     #
-    x_train, y_train, x_test, y_test, x_val, y_val, class_weights_dict = _data(data_pth)
+    x_train, y_train, x_test, y_test, class_weights_dict = _data(data_pth,split_val=False,verbose=1)
 
     #
     # train and save
     #
     config_tf(user_mem=2500, cuda_rate=0.2)
-    model, history_dict = TrainResNet(x_train, y_train, x_val, y_val, class_weights_dict, filepth)
+    model, history_dict = TrainResNet(x_train, y_train, class_weights_dict=class_weights_dict, epochs=EPOCHS, lr=LEARNING_RATE)
     net_saver(model, modeldir, history_dict)
 
     #
-    # test and save
+    # test
     #
-    y_test, p_pred, y_real, y_pred = net_predictor(modeldir, x_test, y_test)
+    y_test, p_pred, y_real, y_pred = net_predictor(modeldir, x_test, y_test, Onsave=True)
+    acc, recalls, precisions, f1s, mccs = test_score(y_real=y_real, y_pred=y_pred, classes=10)
+    print('\nacc: %s'
+          '\nrecalls: %s'
+          '\nprecisions: %s'
+          '\nf1s: %s'
+          '\nmccs: %s' % (acc, recalls, precisions, f1s, mccs))
+    print('\nThe Hypers are: mode_%s_epochs_%s_lr_%s' % (MODE, EPOCHS, LEARNING_RATE))
 
-def _data(data_pth):
+def _data(data_pth, split_val=True, verbose=1):
     data = np.load(data_pth, allow_pickle=True)
     x, y = data['x'], data['y']
+    x = x[:,:,np.newaxis]
     x_train, y_train, x_test, y_test = split_data(x, y)
-    x_train, y_train, x_val, y_val = split_data(x_train, y_train)
-
-    x_train = x_train[:,:,np.newaxis]
-    x_test  = x_test[:,:,np.newaxis]
-    x_val   = x_val[:,:,np.newaxis]
 
     class_weights_dict = calc_class_weights(y_train)
 
-    y_train = to_one_hot(y_train, dimension=10)
-    y_test = to_one_hot(y_test, dimension=10)
-    y_val = to_one_hot(y_val, dimension=10)
+    if split_val:
+        x_train, y_train, x_val, y_val = split_data(x_train, y_train)
+        y_train = to_one_hot(y_train, dimension=10)
+        y_test = to_one_hot(y_test, dimension=10)
+        y_val = to_one_hot(y_val, dimension=10)
+        if verbose:
+            print('\nx_train shape: %s'
+                  '\ny_train shape: %s'
+                  '\nx_test shape: %s'
+                  '\ny_test shape: %s'
+                  '\nx_val shape: %s'
+                  '\ny_val shape: %s'
+                  % (x_train.shape, y_train.shape, x_test.shape, y_test.shape, x_val.shape, y_val.shape))
+        return x_train, y_train, x_test, y_test, x_val, y_val, class_weights_dict
+    else:
+        y_train = to_one_hot(y_train, dimension=10)
+        y_test = to_one_hot(y_test, dimension=10)
+        if verbose:
+            print('\nx_train shape: %s'
+                  '\ny_train shape: %s'
+                  '\nx_test shape: %s'
+                  '\ny_test shape: %s'
+                  % (x_train.shape, y_train.shape, x_test.shape, y_test.shape))
+        return x_train, y_train, x_test, y_test, class_weights_dict
 
-    print('\nx_train shape: %s'
-          '\ny_train shape: %s'
-          '\nx_test shape: %s'
-          '\ny_test shape: %s'
-          '\nx_val shape: %s'
-          '\ny_val shape: %s'
-          % (x_train.shape, y_train.shape, x_test.shape, y_test.shape, x_val.shape, y_val.shape))
-    return x_train, y_train, x_test, y_test, x_val, y_val, class_weights_dict
-
-def TrainResNet(x_train, y_train, x_val, y_val, class_weights_dict, filepth):
+def TrainResNet(x_train, y_train, x_val=None, y_val=None, class_weights_dict=None, filepth=None, epochs=200, lr=1e-2, verbose=1):
     summary    = True
-    verbose    = 1
     batch_size = 128
-    epochs     = 200
     optimizer  = 'adam'
-    lr         = 1e-2
     activator  = 'relu'
 
     kernel_size   = 3
@@ -84,7 +128,7 @@ def TrainResNet(x_train, y_train, x_val, y_val, class_weights_dict, filepth):
 
     ## used in the reduce loop
     residual_stride     = 2
-    reduce_layers       = 6  # 300 -> 150 -> 75 -> 38 -> 19 -> 10 -> 5
+    reduce_layers       = 6  # 100 -> 50 -> 25 -> 13 -> 7 -> 4 -> 2
     reduce1D_filter_num = 16
 
     dense_num     = 128
@@ -99,32 +143,33 @@ def TrainResNet(x_train, y_train, x_val, y_val, class_weights_dict, filepth):
         elif optimizer == 'rmsprop':
             chosed_optimizer = optimizers.RMSprop(lr=lr)
 
-    #
-    # callback
-    #
-    my_callbacks = [
-        callbacks.ReduceLROnPlateau(
-            monitor='val_loss',
-            factor=0.3,
-            patience=5,
-            verbose=verbose
-        ),
-        callbacks.EarlyStopping(
-            monitor='val_acc',
-            min_delta=1e-4,
-            patience=20,
-            mode='max',
-            verbose=verbose,
-        ),
-        callbacks.ModelCheckpoint(
-            filepath=filepth,
-            monitor='val_acc',
-            mode='max',
-            save_best_only=True,
-            save_weights_only=True,
-            verbose=verbose,
-        )
-    ]
+    if x_val is None or y_val is None:
+        val_data = None
+        my_callbacks = None
+    else:
+        val_data = (x_val, y_val)
+        my_callbacks = [
+            callbacks.ReduceLROnPlateau(
+                monitor='val_loss',
+                factor=0.3,
+                patience=5,
+                verbose=verbose,
+            ),
+            callbacks.EarlyStopping(
+                monitor='val_acc',
+                min_delta=1e-4,
+                patience=20,
+                mode='max',
+                verbose=verbose,
+            ),
+        ]
+        if filepth is not None:
+            my_callbacks+=[callbacks.ModelCheckpoint(filepath=filepth,
+                                                     monitor='val_acc',
+                                                     mode='max',
+                                                     save_best_only=True,
+                                                     save_weights_only=True,
+                                                     verbose=verbose,)]
 
     #
     # build
@@ -218,7 +263,7 @@ def TrainResNet(x_train, y_train, x_val, y_val, class_weights_dict, filepth):
                        epochs=epochs,
                        verbose=verbose,
                        callbacks=my_callbacks,
-                       validation_data=(x_val, y_val),
+                       validation_data=val_data,
                        shuffle=True,
                        class_weight=class_weights_dict
                        )
@@ -226,7 +271,10 @@ def TrainResNet(x_train, y_train, x_val, y_val, class_weights_dict, filepth):
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 1:
+        grid_search()
+    else:
+        main()
 
 
 
