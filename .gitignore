@@ -1,2 +1,6 @@
 bak/
 .idea/
+src/__pycache__/
+model/
+*.tmp
+*.docx
