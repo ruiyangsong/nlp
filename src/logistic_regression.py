@@ -38,7 +38,7 @@ def grid_search():
     print('\nThe Best Hypers are: %s, Best val_acc is: %s' %(hyper_tag_lst[acc_lst.index(max(acc_lst))], max(acc_lst)))
 
 def main():
-    if len(sys.argv) == 1:
+    if len(sys.argv) < 4:
         print('Usage: %s %s %s %s'%(sys.argv[0], ['padding','sum'], 'max_iter', 'learning_rate'))
         exit(0)
 
