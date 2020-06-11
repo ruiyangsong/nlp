@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-import os
-import sys
+import os, sys
 import numpy as np
 from utils import split_data, test_score
 
@@ -13,6 +12,8 @@ def grid_search():
     max_iter_lst = [100, 500, 1000, 5000, 10000]
     learning_rate_lst = [0.1, 0.01, 0.001, 0.0001, 0.00001]
 
+    verbose = 0
+
     hyper_tag_lst = []
     acc_lst       = []
     for mode in mode_lst:
@@ -22,11 +23,7 @@ def grid_search():
                 data_pth = '../data/mode_%s.npz' % mode
                 x_train, y_train, x_test, y_test, x_val, y_val = _data(data_pth, split_val=True)
 
-                MAX_ITER = max_iter
-                LEARNING_RATE = learning_rate
-                verbose = 0
-
-                LR = LogisticRegression(max_iter=MAX_ITER, lr=LEARNING_RATE)
+                LR = LogisticRegression(max_iter=max_iter, lr=learning_rate)
                 thetas = LR.fit(x=x_train, y=y_train, reduce_lr=True, verbose=verbose)
                 y_pred_val = LR.predict(thetas, x_val, y_val, Onsave=False)
                 acc, recalls, precisions, f1s, mccs = test_score(y_real=y_val, y_pred=y_pred_val, classes=10)

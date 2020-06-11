@@ -4,10 +4,14 @@ import numpy as np
 from keras import models, layers, optimizers, callbacks, regularizers, initializers
 from utils import split_data, calc_class_weights, to_one_hot, config_tf, net_saver, net_predictor, test_score
 
+os.environ['MKL_NUM_THREADS'] = '3'
+os.environ['OPENBLAS_NUM_THREADS'] = '3'
+np.set_printoptions(linewidth=np.inf)
+
 def grid_search():
-    mode_lst = ['sum']#['padding', 'sum']
-    epochs_lst = [2] #cuz early stopping exists
-    learning_rate_lst = [0.1,0.01]#[0.1, 0.01, 0.001, 0.0001, 0.00001]
+    mode_lst = ['padding', 'sum']
+    epochs_lst = [200] #cuz early stopping exists
+    learning_rate_lst = [0.1, 0.01, 0.001, 0.0001, 0.00001]
 
     verbose = 0
 
@@ -16,7 +20,6 @@ def grid_search():
     for mode in mode_lst:
         for epochs in epochs_lst:
             for learning_rate in learning_rate_lst:
-                print('\nmode_%s_epochs_%s_lr_%s' % (mode, epochs, learning_rate))
                 data_pth   = '../data/mode_%s.npz' %mode
                 x_train, y_train, x_test, y_test, x_val, y_val, class_weights_dict = _data(data_pth,split_val=True,verbose=verbose)
 
@@ -25,6 +28,7 @@ def grid_search():
                 acc = history_dict['val_acc'][-1]
                 early_epochs = len(history_dict['val_acc'])
                 hyper_tag_lst.append('%s_%s_%s' % (mode, early_epochs, learning_rate))
+                print('\nmode_%s_epochs_%s_lr_%s' % (mode, epochs, learning_rate))
                 acc_lst.append(acc)
                 print('val_acc:', acc)
                 # sys.stdout.flush()# or "python -u“
