@@ -43,7 +43,7 @@ def main():
     LEARNING_RATE = float(sys.argv[3])
 
     data_pth = '../data/mode_%s.npz' %MODE
-    model_name = '%s_mode%s_%s'%(sys.argv[0].split('/')[-1][:-3], sys.argv[1], time.strftime("%Y.%m.%d.%H.%M.%S", time.localtime()))
+    model_name = '%s_mode%s_%s'%(sys.argv[0].split('/')[-1][:-3], MODE, time.strftime("%Y.%m.%d.%H.%M.%S", time.localtime()))
     modeldir   = '../model/Conv1D/%s' % model_name
     os.makedirs(modeldir, exist_ok=True)
 
