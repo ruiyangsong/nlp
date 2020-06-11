@@ -1,37 +1,90 @@
-import os, sys
+#!/usr/bin/env python
+import os
+import sys
 import numpy as np
 from utils import split_data, test_score
 
+os.environ['MKL_NUM_THREADS'] = '3'
+os.environ['OPENBLAS_NUM_THREADS'] = '3'
+np.set_printoptions(linewidth=np.inf)
+
+def grid_search():
+    mode_lst     = ['padding', 'sum']
+    max_iter_lst = [100, 500, 1000, 5000, 10000]
+    learning_rate_lst = [0.1, 0.01, 0.001, 0.0001, 0.00001]
+
+    hyper_tag_lst = []
+    acc_lst       = []
+    for mode in mode_lst:
+        for max_iter in max_iter_lst:
+            for learning_rate in learning_rate_lst:
+                print('\nmode_%s_iter_%s_lr_%s'%(mode,max_iter,learning_rate))
+                data_pth = '../data/mode_%s.npz' % mode
+                x_train, y_train, x_test, y_test, x_val, y_val = _data(data_pth, split_val=True)
+
+                MAX_ITER = max_iter
+                LEARNING_RATE = learning_rate
+                verbose = 0
+
+                LR = LogisticRegression(max_iter=MAX_ITER, lr=LEARNING_RATE)
+                thetas = LR.fit(x=x_train, y=y_train, reduce_lr=True, verbose=verbose)
+                y_pred_val = LR.predict(thetas, x_val, y_val, Onsave=False)
+                acc, recalls, precisions, f1s, mccs = test_score(y_real=y_val, y_pred=y_pred_val, classes=10)
+
+                hyper_tag_lst.append('%s_%s_%s'%(mode, max_iter, learning_rate))
+                acc_lst.append(acc)
+                print('val_acc:', acc)
+                # sys.stdout.flush()# or "python -u“
+    print('\nThe Best Hypers are: %s, Best val_acc is: %s' %(hyper_tag_lst[acc_lst.index(max(acc_lst))], max(acc_lst)))
+
 def main():
     if len(sys.argv) == 1:
-        print('Usage: %s %s'%(sys.argv[0], ['stack','padding','sum']))
+        print('Usage: %s %s %s %s'%(sys.argv[0], ['stack','padding','sum'], 'max_iter', 'learning_rate'))
         exit(0)
+
     data_pth = '../data/mode_%s.npz' % sys.argv[1]
     outdir   = '../model/LR/mode_%s' % sys.argv[1]
     os.makedirs(outdir, exist_ok=True)
-    x_train, y_train, x_test, y_test, x_val, y_val = _data(data_pth)
+    x_train, y_train, x_test, y_test = _data(data_pth, split_val=False, verbose=1)
 
-    MAX_ITER = 10000
-    LEARNING_RATE = 0.1
+    MAX_ITER = int(sys.argv[2])
+    LEARNING_RATE = float(sys.argv[3])
+    verbose = 1
+
     LR = LogisticRegression(max_iter=MAX_ITER, lr=LEARNING_RATE)
-    thetas = LR.fit(x=x_train, y=y_train, reduce_lr=True, verbose=1)
-    y_pred_val = LR.predict(thetas, x_val, y_val, Onsave=False)
-    acc, recalls, precisions, f1s, mccs = test_score(y_real=y_val, y_pred=y_pred_val, classes=10)
-    print('\nval_acc:',acc)
+    thetas = LR.fit(x=x_train, y=y_train, reduce_lr=True, verbose=verbose)
     y_pred = LR.predict(thetas, x_test, y_test, modeldir=outdir, Onsave=True)
+    acc, recalls, precisions, f1s, mccs = test_score(y_real=y_test, y_pred=y_pred, classes=10)
+    print('\nacc: %s'
+          '\nrecalls: %s'
+          '\nprecisions: %s'
+          '\nf1s: %s'
+          '\nmccs: %s'%(acc, recalls, precisions, f1s, mccs))
+    print('\nThe Hypers are: mode_%s_iter_%s_lr_%s'%(sys.argv[1],sys.argv[2],sys.argv[3]))
 
-def _data(data_pth):
+def _data(data_pth, split_val=True, verbose=0):
     data = np.load(data_pth, allow_pickle=True)
     x, y = data['x'], data['y']
     x_train, y_train, x_test, y_test = split_data(x, y)
-    x_train, y_train, x_val, y_val = split_data(x_train, y_train)
-
-    print('\nx_train shape: %s'
-          '\ny_train shape: %s'
-          '\nx_test shape: %s'
-          '\ny_test shape: %s'
-          % (x_train.shape, y_train.shape, x_test.shape, y_test.shape))
-    return x_train, y_train, x_test, y_test, x_val, y_val
+    if split_val:
+        x_train, y_train, x_val, y_val = split_data(x_train, y_train)
+        if verbose:
+            print('\nx_train shape: %s'
+                  '\ny_train shape: %s'
+                  '\nx_test shape: %s'
+                  '\ny_test shape: %s'
+                  '\nx_val shape: %s'
+                  '\ny_val shape: %s'
+                  % (x_train.shape, y_train.shape, x_test.shape, y_test.shape, x_val.shape, y_val.shape))
+        return x_train, y_train, x_test, y_test, x_val, y_val
+    else:
+        if verbose:
+            print('\nx_train shape: %s'
+                  '\ny_train shape: %s'
+                  '\nx_test shape: %s'
+                  '\ny_test shape: %s'
+                  % (x_train.shape, y_train.shape, x_test.shape, y_test.shape))
+        return x_train, y_train, x_test, y_test
 
 class LogisticRegression(object):
     def __init__(self, max_iter=5000, lr=0.1):
@@ -62,7 +115,8 @@ class LogisticRegression(object):
         classes = np.unique(y)
         thetas  = []
         for c in classes:
-            print('\n@Fitting class %s...'%c)
+            if verbose:
+                print('\n@Fitting class %s...'%c)
             binary_y = np.where(y == c, 1, 0) # one-hot label
             theta    = np.zeros(x.shape[1]) # init theta to zeros
             cost     = []
@@ -71,8 +125,8 @@ class LogisticRegression(object):
                 cost.append(_cost)
                 theta += self.learning_rate * _grad
                 if reduce_lr:
-                    self._reduceLR(cost)
-                    if self.learning_rate < 1e-5:
+                    self._reduceLR(cost, verbose=verbose)
+                    if self.learning_rate < 1e-5 and verbose:
                         print('\n --lr is too small, early stopping was called.')
                         break
                 if verbose and epoch % 1000 == 0:
@@ -102,4 +156,7 @@ class LogisticRegression(object):
         return y_pred
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 1:
+        grid_search()
+    else:
+        main()
