@@ -39,7 +39,7 @@ def grid_search():
 
 def main():
     if len(sys.argv) == 1:
-        print('Usage: %s %s %s %s'%(sys.argv[0], ['stack','padding','sum'], 'max_iter', 'learning_rate'))
+        print('Usage: %s %s %s %s'%(sys.argv[0], ['padding','sum'], 'max_iter', 'learning_rate'))
         exit(0)
 
     data_pth      = '../data/mode_%s.npz' % sys.argv[1]
