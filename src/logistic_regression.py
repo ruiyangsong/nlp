@@ -42,11 +42,13 @@ def main():
         print('Usage: %s %s %s %s'%(sys.argv[0], ['padding','sum'], 'max_iter', 'learning_rate'))
         exit(0)
 
-    data_pth      = '../data/mode_%s.npz' % sys.argv[1]
-    outdir        = '../model/LR/mode_%s' % sys.argv[1]
+    MODE          = sys.argv[1]
     MAX_ITER      = int(sys.argv[2])
     LEARNING_RATE = float(sys.argv[3])
+
     verbose = 1
+    data_pth = '../data/mode_%s.npz' % MODE
+    outdir = '../model/LR/mode_%s' % MODE
     os.makedirs(outdir, exist_ok=True)
     x_train, y_train, x_test, y_test = _data(data_pth, split_val=False, verbose=1)
 
@@ -59,7 +61,7 @@ def main():
           '\nprecisions: %s'
           '\nf1s: %s'
           '\nmccs: %s'%(acc, recalls, precisions, f1s, mccs))
-    print('\nThe Hypers are: mode_%s_iter_%s_lr_%s'%(sys.argv[1],sys.argv[2],sys.argv[3]))
+    print('\nThe Hypers are: mode_%s_iter_%s_lr_%s'%(MODE, MAX_ITER, LEARNING_RATE))
 
 def _data(data_pth, split_val=True, verbose=0):
     data = np.load(data_pth, allow_pickle=True)
