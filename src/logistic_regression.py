@@ -42,14 +42,13 @@ def main():
         print('Usage: %s %s %s %s'%(sys.argv[0], ['stack','padding','sum'], 'max_iter', 'learning_rate'))
         exit(0)
 
-    data_pth = '../data/mode_%s.npz' % sys.argv[1]
-    outdir   = '../model/LR/mode_%s' % sys.argv[1]
-    os.makedirs(outdir, exist_ok=True)
-    x_train, y_train, x_test, y_test = _data(data_pth, split_val=False, verbose=1)
-
-    MAX_ITER = int(sys.argv[2])
+    data_pth      = '../data/mode_%s.npz' % sys.argv[1]
+    outdir        = '../model/LR/mode_%s' % sys.argv[1]
+    MAX_ITER      = int(sys.argv[2])
     LEARNING_RATE = float(sys.argv[3])
     verbose = 1
+    os.makedirs(outdir, exist_ok=True)
+    x_train, y_train, x_test, y_test = _data(data_pth, split_val=False, verbose=1)
 
     LR = LogisticRegression(max_iter=MAX_ITER, lr=LEARNING_RATE)
     thetas = LR.fit(x=x_train, y=y_train, reduce_lr=True, verbose=verbose)
