@@ -116,7 +116,7 @@ class LogisticRegression(object):
         for c in classes:
             if verbose:
                 print('\n@Fitting class %s...'%c)
-            binary_y = np.where(y == c, 1, 0) # one-hot label
+            binary_y = np.where(y == c, 1, 0) # reset labels to 0 or 1
             theta    = np.zeros(x.shape[1]) # init theta to zeros
             cost     = []
             for epoch in range(self.max_iteration):
