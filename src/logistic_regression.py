@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os, sys
 import numpy as np
-from utils import split_data, test_score
+from utils import split_data, test_score, to_one_hot
 
 os.environ['MKL_NUM_THREADS'] = '3'
 os.environ['OPENBLAS_NUM_THREADS'] = '3'
@@ -45,7 +45,7 @@ def main():
 
     verbose = 1
     data_pth = '../data/mode_%s.npz' % MODE
-    outdir = '../model/LR/mode_%s' % MODE
+    outdir = '../model/LR/mode_%s_maxiter_%s_lr_%s' %(MODE,MAX_ITER,LEARNING_RATE)
     os.makedirs(outdir, exist_ok=True)
     x_train, y_train, x_test, y_test = _data(data_pth, split_val=False, verbose=1)
 
@@ -138,17 +138,18 @@ class LogisticRegression(object):
 
     def predict(self, thetas, x_test, y_test, modeldir='../model/LR', Onsave=True):
         x = np.insert(x_test, 0, 1, axis=1)
+        y_real = y_test
         y_pred = [np.argmax(
             [self._sigmoid(xi @ theta) for theta in thetas]
         ) for xi in x]
-        y_real = y_test
+        p_real = to_one_hot(y_test)
         p_pred = [[self._sigmoid(xi @ theta) for theta in thetas] for xi in x]
         #
         # save thetas, p_pred of each bi-classifiers
         #
         if Onsave:
             try:
-                np.savez('%s/test_rst.npz' % modeldir, y_real=y_real, y_pred=y_pred, p_pred=p_pred)
+                np.savez('%s/test_rst.npz' % modeldir, y_real=y_real, y_pred=y_pred, p_real = p_real, p_pred=p_pred)
                 np.savez('%s/thetas.npz' % modeldir, thetas=thetas)
             except:
                 print('save thetas and test_rst failed')
