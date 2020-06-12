@@ -107,10 +107,11 @@ class LogisticRegression(object):
             if verbose:
                 print('\n--reduce learning_rate to %.8f'%self.learning_rate)
 
-    def fit(self, x, y, reduce_lr=True, verbose=1):
+    def fit(self, x, y, classes=None, reduce_lr=True, verbose=1):
         '''fit model by one vs. rest binary classification'''
         x = np.insert(x, 0, 1, axis=1) # integrate bias to theta
-        classes = np.unique(y)
+        if classes is None:
+            classes = np.unique(y)
         thetas  = []
         for c in classes:
             if verbose:
