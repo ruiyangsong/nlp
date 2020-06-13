@@ -88,6 +88,7 @@ nlp:.
 ```
 ## dataset
 Train data set format are as blow, and test data set do not have labels (商品编码).
+
 |样本编号|商品名称|商品价格|商品编码|
 |:----:  |:----:  |:----:  |:----:  |
 |1|贝蒂斯双瓶礼盒橄榄油|42|101|
@@ -95,9 +96,11 @@ Train data set format are as blow, and test data set do not have labels (商品�
 |...|...|...|...|
 |12238|转售电力收入|77|110|
 ||
-![alt text](./fig/data_hist.png 'roc')
+
+![alt text](./fig/data_hist.png 'histogram')
 >hist
-![alt text](./fig/data_pie.png 'roc')
+
+![alt text](./fig/data_pie.png 'pie chart')
 >pie
 >
 ## Usage
@@ -138,6 +141,7 @@ python resnet padding 81 0.01
 ### The ROC curve and AUC
 ![alt text](./fig/roc_auc.png 'roc')
 >ROC curve
+
 ### The predicted scores (LR, SVM, ConvNet, ResNet)
 ```text
 ########################################################################################
