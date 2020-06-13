@@ -1,0 +1,62 @@
+Check at: 2020年 06月 12日 星期五 03:01:26 CST
+GPU Free Memory List --> [8755, 519, 519, 519] MiB
+GPU 0 was chosen.
+
+mode_padding_epochs_200_lr_0.1
+val_acc: 0.08478038815497987
+Check at: 2020年 06月 12日 星期五 03:02:51 CST
+GPU Free Memory List --> [5934, 519, 519, 519] MiB
+GPU 0 was chosen.
+
+mode_padding_epochs_200_lr_0.01
+val_acc: 0.6113380999803787
+Check at: 2020年 06月 12日 星期五 03:06:27 CST
+GPU Free Memory List --> [5934, 519, 519, 519] MiB
+GPU 0 was chosen.
+
+mode_padding_epochs_200_lr_0.001
+val_acc: 0.597548518409768
+Check at: 2020年 06月 12日 星期五 03:09:21 CST
+GPU Free Memory List --> [5934, 519, 519, 519] MiB
+GPU 0 was chosen.
+
+mode_padding_epochs_200_lr_0.0001
+val_acc: 0.5735444333385277
+Check at: 2020年 06月 12日 星期五 03:14:43 CST
+GPU Free Memory List --> [3113, 519, 519, 519] MiB
+GPU 0 was chosen.
+
+mode_padding_epochs_200_lr_1e-05
+val_acc: 0.45454545472810415
+Check at: 2020年 06月 12日 星期五 03:19:53 CST
+GPU Free Memory List --> [3113, 519, 519, 519] MiB
+GPU 0 was chosen.
+
+mode_sum_epochs_200_lr_0.1
+val_acc: 0.06332992850607823
+Check at: 2020年 06月 12日 星期五 03:21:05 CST
+GPU Free Memory List --> [3113, 519, 519, 519] MiB
+GPU 0 was chosen.
+
+mode_sum_epochs_200_lr_0.01
+val_acc: 0.5183861081215407
+Check at: 2020年 06月 12日 星期五 03:24:19 CST
+GPU Free Memory List --> [3113, 519, 519, 519] MiB
+GPU 0 was chosen.
+
+mode_sum_epochs_200_lr_0.001
+val_acc: 0.5214504596527069
+Check at: 2020年 06月 12日 星期五 03:26:22 CST
+GPU Free Memory List --> [3113, 519, 519, 519] MiB
+GPU 0 was chosen.
+
+mode_sum_epochs_200_lr_0.0001
+val_acc: 0.4826353424598783
+Check at: 2020年 06月 12日 星期五 03:30:46 CST
+GPU Free Memory List --> [3113, 519, 519, 519] MiB
+GPU 0 was chosen.
+
+mode_sum_epochs_200_lr_1e-05
+val_acc: 0.43360572009213244
+
+The Best Hypers are: padding_111_0.01, Best val_acc is: 0.6113380999803787

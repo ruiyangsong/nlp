@@ -1,0 +1,152 @@
+
+mode_padding_iter_100_lr_0.1
+val_acc: 0.2819203268641471
+
+mode_padding_iter_100_lr_0.01
+val_acc: 0.17722165474974463
+
+mode_padding_iter_100_lr_0.001
+val_acc: 0.16189989785495404
+
+mode_padding_iter_100_lr_0.0001
+val_acc: 0.1491317671092952
+
+mode_padding_iter_100_lr_1e-05
+val_acc: 0.1491317671092952
+
+mode_padding_iter_500_lr_0.1
+val_acc: 0.3452502553626149
+
+mode_padding_iter_500_lr_0.01
+val_acc: 0.23289070480081717
+
+mode_padding_iter_500_lr_0.001
+val_acc: 0.17262512768130744
+
+mode_padding_iter_500_lr_0.0001
+val_acc: 0.16189989785495404
+
+mode_padding_iter_500_lr_1e-05
+val_acc: 0.1491317671092952
+
+mode_padding_iter_1000_lr_0.1
+val_acc: 0.3748723186925434
+
+mode_padding_iter_1000_lr_0.01
+val_acc: 0.2819203268641471
+
+mode_padding_iter_1000_lr_0.001
+val_acc: 0.17722165474974463
+
+mode_padding_iter_1000_lr_0.0001
+val_acc: 0.16189989785495404
+
+mode_padding_iter_1000_lr_1e-05
+val_acc: 0.1491317671092952
+
+mode_padding_iter_5000_lr_0.1
+val_acc: 0.177732379979571
+
+mode_padding_iter_5000_lr_0.01
+val_acc: 0.3452502553626149
+
+mode_padding_iter_5000_lr_0.001
+val_acc: 0.07916241062308478
+
+mode_padding_iter_5000_lr_0.0001
+val_acc: 0.17262512768130744
+
+mode_padding_iter_5000_lr_1e-05
+val_acc: 0.16189989785495404
+
+mode_padding_iter_10000_lr_0.1
+val_acc: 0.19918283963227784
+
+mode_padding_iter_10000_lr_0.01
+val_acc: 0.15270684371807966
+
+mode_padding_iter_10000_lr_0.001
+val_acc: 0.07916241062308478
+
+mode_padding_iter_10000_lr_0.0001
+val_acc: 0.17722165474974463
+
+mode_padding_iter_10000_lr_1e-05
+val_acc: 0.16189989785495404
+
+mode_sum_iter_100_lr_0.1
+val_acc: 0.30337078651685395
+
+mode_sum_iter_100_lr_0.01
+val_acc: 0.17722165474974463
+
+mode_sum_iter_100_lr_0.001
+val_acc: 0.17262512768130744
+
+mode_sum_iter_100_lr_0.0001
+val_acc: 0.16189989785495404
+
+mode_sum_iter_100_lr_1e-05
+val_acc: 0.16189989785495404
+
+mode_sum_iter_500_lr_0.1
+val_acc: 0.38508682328907046
+
+mode_sum_iter_500_lr_0.01
+val_acc: 0.27374872318692545
+
+mode_sum_iter_500_lr_0.001
+val_acc: 0.17722165474974463
+
+mode_sum_iter_500_lr_0.0001
+val_acc: 0.17262512768130744
+
+mode_sum_iter_500_lr_1e-05
+val_acc: 0.16189989785495404
+
+mode_sum_iter_1000_lr_0.1
+val_acc: 0.3978549540347293
+
+mode_sum_iter_1000_lr_0.01
+val_acc: 0.30337078651685395
+
+mode_sum_iter_1000_lr_0.001
+val_acc: 0.17722165474974463
+
+mode_sum_iter_1000_lr_0.0001
+val_acc: 0.17262512768130744
+
+mode_sum_iter_1000_lr_1e-05
+val_acc: 0.16189989785495404
+
+mode_sum_iter_5000_lr_0.1
+val_acc: 0.19867211440245147
+
+mode_sum_iter_5000_lr_0.01
+val_acc: 0.38508682328907046
+
+mode_sum_iter_5000_lr_0.001
+val_acc: 0.07916241062308478
+
+mode_sum_iter_5000_lr_0.0001
+val_acc: 0.17722165474974463
+
+mode_sum_iter_5000_lr_1e-05
+val_acc: 0.17262512768130744
+
+mode_sum_iter_10000_lr_0.1
+val_acc: 0.20531154239019409
+
+mode_sum_iter_10000_lr_0.01
+val_acc: 0.17262512768130744
+
+mode_sum_iter_10000_lr_0.001
+val_acc: 0.13534218590398367
+
+mode_sum_iter_10000_lr_0.0001
+val_acc: 0.11491317671092952
+
+mode_sum_iter_10000_lr_1e-05
+val_acc: 0.17262512768130744
+
+The Best Hypers are: sum_1000_0.1, Best val_acc is: 0.3978549540347293

@@ -60,16 +60,22 @@ def conf_mat(y_real, y_pred):
     from sklearn.metrics import confusion_matrix
     return confusion_matrix(y_real, y_pred)
 
-def test_score(y_real, y_pred, classes=None):
-    '''y_real and y_pred are 0D array'''
+def _metric(cm, classes):
     if classes is None:
-        classes = len(np.unique(np.hstack((y_real, y_pred))))
-    cm = conf_mat(y_real, y_pred)
+        classes = cm.shape[0]
     # print(cm)
     tps = [cm[i, i] for i in range(classes)]
     fns = [np.sum(cm[i, :]) - cm[i, i] for i in range(classes)]
     fps = [np.sum(cm[:, i]) - cm[i, i] for i in range(classes)]
     tns = [np.sum(cm) - np.sum(cm[i, :]) - np.sum(cm[:, i]) + cm[i, i] for i in range(classes)]
+    return tps, tns, fps, fns
+
+def test_score(y_real, y_pred, classes=None):
+    '''y_real and y_pred are 0D array'''
+    if classes is None:
+        classes = len(np.unique(np.hstack((y_real, y_pred))))
+    cm = conf_mat(y_real, y_pred)
+    tps, tns, fps, fns = _metric(cm, classes)
 
     recalls    = np.array([tps[i] / (tps[i] + fns[i]) for i in range(classes)])
     precisions = np.array([tps[i] / (tps[i] + fps[i]) for i in range(classes)])

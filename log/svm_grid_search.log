@@ -1,0 +1,98 @@
+
+mode_padding_C_1.0_kernel_linear
+val_acc: 0.475485188968335
+
+mode_padding_C_1.0_kernel_poly
+val_acc: 0.1491317671092952
+
+mode_padding_C_1.0_kernel_rbf
+val_acc: 0.3682328907048008
+
+mode_padding_C_1.0_kernel_sigmoid
+val_acc: 0.34933605720122574
+
+mode_padding_C_10.0_kernel_linear
+val_acc: 0.5097037793667007
+
+mode_padding_C_10.0_kernel_poly
+val_acc: 0.1491317671092952
+
+mode_padding_C_10.0_kernel_rbf
+val_acc: 0.43360572012257403
+
+mode_padding_C_10.0_kernel_sigmoid
+val_acc: 0.40755873340143
+
+mode_padding_C_100.0_kernel_linear
+val_acc: 0.533197139938713
+
+mode_padding_C_100.0_kernel_poly
+val_acc: 0.2170582226762002
+
+mode_padding_C_100.0_kernel_rbf
+val_acc: 0.48723186925434114
+
+mode_padding_C_100.0_kernel_sigmoid
+val_acc: 0.45556690500510727
+
+mode_padding_C_1000.0_kernel_linear
+val_acc: 0.5352400408580184
+
+mode_padding_C_1000.0_kernel_poly
+val_acc: 0.263023493360572
+
+mode_padding_C_1000.0_kernel_rbf
+val_acc: 0.5510725229826353
+
+mode_padding_C_1000.0_kernel_sigmoid
+val_acc: 0.4943820224719101
+
+mode_sum_C_1.0_kernel_linear
+val_acc: 0.46884576098059244
+
+mode_sum_C_1.0_kernel_poly
+val_acc: 0.25842696629213485
+
+mode_sum_C_1.0_kernel_rbf
+val_acc: 0.4198161389172625
+
+mode_sum_C_1.0_kernel_sigmoid
+val_acc: 0.3953013278855976
+
+mode_sum_C_10.0_kernel_linear
+val_acc: 0.473953013278856
+
+mode_sum_C_10.0_kernel_poly
+val_acc: 0.3442288049029622
+
+mode_sum_C_10.0_kernel_rbf
+val_acc: 0.46833503575076607
+
+mode_sum_C_10.0_kernel_sigmoid
+val_acc: 0.3707865168539326
+
+mode_sum_C_100.0_kernel_linear
+val_acc: 0.4816138917262513
+
+mode_sum_C_100.0_kernel_poly
+val_acc: 0.41521961184882533
+
+mode_sum_C_100.0_kernel_rbf
+val_acc: 0.5250255362614913
+
+mode_sum_C_100.0_kernel_sigmoid
+val_acc: 0.3891726251276813
+
+mode_sum_C_1000.0_kernel_linear
+val_acc: 0.4816138917262513
+
+mode_sum_C_1000.0_kernel_poly
+val_acc: 0.4795709908069459
+
+mode_sum_C_1000.0_kernel_rbf
+val_acc: 0.5617977528089888
+
+mode_sum_C_1000.0_kernel_sigmoid
+val_acc: 0.38661899897854957
+
+The Best Hypers are: sum_1000.0_rbf, Best val_acc is: 0.5617977528089888
