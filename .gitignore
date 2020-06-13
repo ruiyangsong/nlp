@@ -1,9 +1,6 @@
 bak/
 .idea/
 src/__pycache__/
-/model
-data/*.npz
 *.tmp
 *.docx
 data/mode_stack.npz
-tree
