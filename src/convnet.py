@@ -8,6 +8,9 @@ os.environ['MKL_NUM_THREADS'] = '3'
 os.environ['OPENBLAS_NUM_THREADS'] = '3'
 np.set_printoptions(linewidth=np.inf)
 
+global USEGPU
+USEGPU = False
+
 def grid_search():
     mode_lst = ['padding', 'sum']
     epochs_lst = [200] #cuz early stopping exists
@@ -22,8 +25,8 @@ def grid_search():
             for learning_rate in learning_rate_lst:
                 data_pth   = '../data/mode_%s.npz' %mode
                 x_train, y_train, x_test, y_test, x_val, y_val, class_weights_dict = _data(data_pth,split_val=True,verbose=verbose)
-
-                config_tf(user_mem=2500, cuda_rate=0.2)
+                if USEGPU:
+                    config_tf(user_mem=2500, cuda_rate=0.2)
                 model, history_dict = TrainConv1D(x_train, y_train, x_val, y_val, class_weights_dict, filepth=None, epochs=epochs, lr=learning_rate,verbose=verbose)
                 acc = history_dict['val_acc'][-1]
                 early_epochs = len(history_dict['val_acc'])
@@ -57,7 +60,8 @@ def main():
     #
     # train and save
     #
-    config_tf(user_mem=2500, cuda_rate=0.2)
+    if USEGPU:
+        config_tf(user_mem=2500, cuda_rate=0.2)
     model, history_dict = TrainConv1D(x_train, y_train, class_weights_dict=class_weights_dict, epochs=EPOCHS, lr=LEARNING_RATE)
     net_saver(model, modeldir, history_dict)
 
