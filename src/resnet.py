@@ -65,12 +65,14 @@ def main():
     # test
     #
     y_test, p_pred, y_real, y_pred = net_predictor(modeldir, x_test, y_test, Onsave=True)
-    acc, recalls, precisions, f1s, mccs, tps, tns, fps, fns = test_score(y_real=y_real, y_pred=y_pred, classes=10)
+    acc, f1, mcc, recalls, precisions, f1s, mccs = test_score(y_real=y_real, y_pred=y_pred, classes=10)
     print('\nacc: %s'
+          '\nf1: %s'
+          '\nmcc: %s'
           '\nrecalls: %s'
           '\nprecisions: %s'
           '\nf1s: %s'
-          '\nmccs: %s' % (acc, recalls, precisions, f1s, mccs))
+          '\nmccs: %s' % (acc, f1, mcc, recalls, precisions, f1s, mccs))
     print('\nThe Hypers are: mode_%s_epochs_%s_lr_%s' % (MODE, EPOCHS, LEARNING_RATE))
 
 def _data(data_pth, split_val=True, verbose=1):
