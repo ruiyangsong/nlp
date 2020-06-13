@@ -95,7 +95,6 @@ Train data set format are as blow, and test data set do not have labels (商品�
 |2|充电强光灯灯珠|33|101|
 |...|...|...|...|
 |12238|转售电力收入|77|110|
-||
 
 ![alt text](./fig/data_hist.png 'histogram')
 >hist
