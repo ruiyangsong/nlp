@@ -227,6 +227,12 @@ def net_saver(model, modeldir, history_dict):
         loss_plot(history_dict, outpth=figure_pth)
     except:
         print('save loss plot figure failed.')
+    ## save model figure
+    try:
+        from keras.utils import plot_model
+        plot_model(model, to_file='%s/model.png'%modeldir, show_shapes=True, show_layer_names=True, dpi=200)
+    except:
+        print('save model figure failed.')
 
 def net_predictor(modeldir, x_test, y_test, Onsave=True):
     from keras import models
