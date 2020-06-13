@@ -65,7 +65,7 @@ def main():
     # test
     #
     y_test, p_pred, y_real, y_pred = net_predictor(modeldir, x_test, y_test, Onsave=True)
-    acc, recalls, precisions, f1s, mccs = test_score(y_real=y_real, y_pred=y_pred, classes=10)
+    acc, recalls, precisions, f1s, mccs, tps, tns, fps, fns = test_score(y_real=y_real, y_pred=y_pred, classes=10)
     print('\nacc: %s'
           '\nrecalls: %s'
           '\nprecisions: %s'

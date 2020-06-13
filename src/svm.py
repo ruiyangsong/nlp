@@ -26,7 +26,7 @@ def grid_search():
                 svm_clf = SupportVectorMachine(C=C, kernel=kernel, verbose=verbose)
                 svm_clf.fit(x=x_train, y=y_train)
                 y_pred_val = svm_clf.predict(x_val, y_val, Onsave=False)
-                acc, recalls, precisions, f1s, mccs = test_score(y_real=y_val, y_pred=y_pred_val, classes=10)
+                acc, recalls, precisions, f1s, mccs, tps, tns, fps, fns = test_score(y_real=y_val, y_pred=y_pred_val, classes=10)
 
                 hyper_tag_lst.append('%s_%s_%s'%(mode, C, kernel))
                 acc_lst.append(acc)
@@ -52,7 +52,7 @@ def main():
     svm_clf = SupportVectorMachine(C=C,kernel=KERNEL,verbose=verbose)
     svm_clf.fit(x=x_train, y=y_train)
     y_pred = svm_clf.predict(x_test, y_test, modeldir=outdir, Onsave=True)
-    acc, recalls, precisions, f1s, mccs = test_score(y_real=y_test, y_pred=y_pred, classes=10)
+    acc, recalls, precisions, f1s, mccs, tps, tns, fps, fns = test_score(y_real=y_test, y_pred=y_pred, classes=10)
     print('\nacc: %s'
           '\nrecalls: %s'
           '\nprecisions: %s'
