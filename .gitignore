@@ -1,7 +1,6 @@
 bak/
 .idea/
 src/__pycache__/
-model/
 *.tmp
 *.docx
 data/mode_stack.npz
