@@ -23,9 +23,11 @@ version greater than the listed ones should also work.
 nlp:.
 │  .gitignore
 │  baidu_stopwords.txt
+│  LICENSE
 │  README.md
+│  tree
 │  userdict.txt
-│
+│          
 ├─data
 │      data.csv
 │      keywords.csv
@@ -34,8 +36,12 @@ nlp:.
 │      mode_sum.npz
 │      
 ├─fig
+│      auto-encoder2Dim.png
 │      data_hist.png
 │      data_pie.png
+│      network.emf
+│      network.png
+│      network.pptx
 │      roc_auc.png
 │      
 ├─log
@@ -78,13 +84,14 @@ nlp:.
 │          dim100_window3_cnt1.model
 │          
 └─src
+    │  auto_encoder.py
     │  compare.py
     │  convnet.py
     │  logistic_regression.py
     │  resnet.py
     │  svm.py
     │  utils.py
-    │  word2vec.py            
+    │  word2vec.py      
 ```
 ## dataset
 Train data set format are as blow, and test data set do not have labels (商品编码).
