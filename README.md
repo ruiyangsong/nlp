@@ -119,6 +119,7 @@ cd nlp/src/
 ```shell script
 python word2vec.py
 ```
+### Train classifiers
 #### Logistic regression
 ```shell script
 python logistic_regression.py sum 1000 0.1
@@ -191,3 +192,6 @@ ResNet    ----------------------------------------------------------------------
           |c10       |1.0000    |0.9949    |0.9975    |0.9972    |          |          |
 ########################################################################################
 ```
+## network structure
+![alt text](./fig/network.png 'net structure')
+>left: ConvNet, right: ResNet
