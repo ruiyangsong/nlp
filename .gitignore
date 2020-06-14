@@ -3,4 +3,5 @@ bak/
 src/__pycache__/
 *.tmp
 *.docx
+*.pdf
 data/mode_stack.npz
